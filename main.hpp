@@ -17,15 +17,15 @@ struct dict{
 };
 
 struct Functions {
-    static std::vector<std::string> param_list;
-    bool help;
-    bool substring;
+  static std::vector<std::string> param_list;
+  bool help;
+  bool substring;
 
-    Functions() : help(), substring() {}
+  Functions() : help(), substring() {}
 
-    void print_help();
-    bool valid_args(const std::vector<std::string>& args);
-    void set_functions(const std::vector<std::string>& args);
+  void print_help();
+  bool valid_args(const std::vector<std::string>& args);
+  void set_functions(const std::vector<std::string>& args);
 };
 
 int get_index(const char &c);
