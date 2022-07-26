@@ -6,8 +6,8 @@
 
 #define MAX_SCRAMBLED_SIZE 24
 #define MAJOR_VER 0
-#define MINOR_VER 1
-#define CHANGE_VER 3
+#define MINOR_VER 2
+#define CHANGE_VER 1
 
 struct dict{
   int letters[26];
