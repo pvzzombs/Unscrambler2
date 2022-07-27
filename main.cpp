@@ -89,7 +89,7 @@ void preload_dictionary(const std::string& dictionary_file, bool message){
 	}
 }
 
-void scramble(const std::string &dictionary_file, bool substring){
+void scramble(){
 	std::stringstream text_flow;
 
 	std::string scrambled;
@@ -161,14 +161,14 @@ void Functions::print_help()
 bool Functions::valid_args(const std::vector<std::string>& args)
 {
     std::vector<std::string> param_copy = param_list;
-	for(int i = 0; i<args.size(); i++) {
+	for(size_t i = 0; i<args.size(); i++) {
 		if(args[i][0] != '-') // ignores non-parameters
 			continue;
 		bool check = false;
-		for(int j = 0; j<param_copy.size(); j++) {
+		for(size_t j = 0; j<param_copy.size(); j++) {
 			if(args[i] == param_copy[j]) {
 				check = true;
-				param_copy.erase(param_copy.begin()+j);
+				param_copy.erase(param_copy.begin()+static_cast<long>(j));
 				break;
 			}
 		}
@@ -182,7 +182,7 @@ bool Functions::valid_args(const std::vector<std::string>& args)
 
 void Functions::set_functions(const std::vector<std::string>& args)
 {
-	for(int i = 0; i<args.size(); i++) {
+	for(size_t i = 0; i<args.size(); i++) {
 		if(args[i] == "-h" || args[i] == "--help")
 			help = true;
 		else if(args[i] == "-s" || args[i] == "--substr")
@@ -216,7 +216,7 @@ int main(int argc, char* argv[]){
 
 			switch(choice){
 				case 'a': case 'A':
-					scramble(dictionary_file);
+					scramble();
 					break;
 				case 'b': case 'B':
 					change_dictionary(dictionary_file);
@@ -226,7 +226,7 @@ int main(int argc, char* argv[]){
 					exit(0);
 					break;
 				default:
-					scramble(dictionary_file);
+					scramble();
 			}
 			std::cout << std::endl << std::endl;
 			//preload_dictionary(dictionary_file, 0);
