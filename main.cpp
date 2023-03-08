@@ -1,13 +1,13 @@
 #include "main.hpp"
 
-dict::dict(){
+Dict::Dict(){
   //memset(letters, 0, 26 * sizeof(int));
   std::fill(std::begin(letters), std::end(letters), 0);
   pass = true;
 }
 
 std::vector<std::string> Functions::param_list = {"-h", "--help", "-s", "--substr"};
-std::vector <dict> dictionary;
+std::vector <Dict> dictionary;
 
 int get_index(const char &c){
   int temp = -1;
@@ -20,9 +20,9 @@ int get_index(const char &c){
   return temp;
 }
 
-dict process_word(const std::string &here){
+Dict process_word(const std::string &here){
   uint64_t i, length = here.length();
-  dict temporary;
+  Dict temporary;
   temporary.word = here;
 
   for(i = 0; i < length; i++){
@@ -37,7 +37,7 @@ dict process_word(const std::string &here){
   return temporary;
 }
 
-bool check_if_pass(const dict &source, dict &current){
+bool check_if_pass(const Dict &source, Dict &current){
   uint64_t i;
   for(i = 0; i < 26; i++){
     if(current.letters[i] > source.letters[i]){
@@ -93,7 +93,7 @@ void scramble(){
   std::stringstream text_flow;
 
   std::string scrambled;
-  dict scrambled_dict;
+  Dict scrambled_dict;
 
   bool check = false;
   uint64_t i, leng;
@@ -259,7 +259,7 @@ int main(int argc, char* argv[]){
         std::stringstream text_flow;
         bool check = false;
         uint64_t i, leng;
-        dict scrambled_dict = process_word(scramble);
+        Dict scrambled_dict = process_word(scramble);
 
         //compare?
         leng = dictionary.size();

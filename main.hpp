@@ -9,11 +9,11 @@
 #define MINOR_VER 2
 #define CHANGE_VER 1
 
-struct dict{
+struct Dict{
   int letters[26];
   bool pass;
   std::string word;
-  dict();
+  Dict();
 };
 
 struct Functions {
@@ -29,8 +29,8 @@ struct Functions {
 };
 
 int get_index(const char &c);
-dict process_word(const std::string &here);
-bool check_if_pass(const dict &source, dict &current);
+Dict process_word(const std::string &here);
+bool check_if_pass(const Dict &source, Dict &current);
 void load_settings(std::ifstream &settings, std::string &dictionary_file);
 void preload_dictionary(const std::string& dictionary_file, bool message = true);
 void scramble(const std::string &dictionary_file, bool substring = false);
