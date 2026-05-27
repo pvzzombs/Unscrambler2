@@ -4,11 +4,12 @@
 #include <sstream>
 #include <cstring>
 #include <algorithm>
+#include <cstdint>
 
 #define MAX_SCRAMBLED_SIZE 24
 #define MAJOR_VER 0
 #define MINOR_VER 3
-#define CHANGE_VER 0
+#define CHANGE_VER 1
 
 struct Dict{
   int letters[26];
