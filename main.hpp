@@ -7,8 +7,8 @@
 
 #define MAX_SCRAMBLED_SIZE 24
 #define MAJOR_VER 0
-#define MINOR_VER 2
-#define CHANGE_VER 1
+#define MINOR_VER 3
+#define CHANGE_VER 0
 
 struct Dict{
   int letters[26];
