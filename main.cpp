@@ -4,6 +4,7 @@ Dict::Dict(){
   //memset(letters, 0, 26 * sizeof(int));
   std::fill(std::begin(letters), std::end(letters), 0);
   pass = true;
+  size = 0;
 }
 
 std::vector<std::string> Functions::param_list = {"-h", "--help", "-s", "--substr"};
@@ -42,9 +43,11 @@ bool check_if_pass(const Dict &source, Dict &current){
   for(i = 0; i < 26; i++){
     if(current.letters[i] > source.letters[i]){
       current.pass = false;
+      current.size = 0;
       break;
     }
   }
+  current.size = current.word.size();
   return current.pass;
 }
 
@@ -97,6 +100,9 @@ void scramble(){
 
   bool check = false;
   uint64_t i, leng;
+  
+  std::vector<Dict> wordsThatPassed;
+  int wordSize = 0;
 
   std::cout << "enter string to scramble: ";
 
@@ -123,8 +129,20 @@ void scramble(){
   for(i = 0; i < leng; i++){
     check = check_if_pass(scrambled_dict, dictionary.at(i));
     if(check){
-      text_flow << "found word: " << dictionary.at(i).word << std::endl;
+      wordsThatPassed.push_back(dictionary.at(i));
     }
+  }
+  
+  std::sort(wordsThatPassed.begin(), wordsThatPassed.end(), [](const Dict &a, const Dict &b ){
+    return a.size > b.size;
+  });
+  
+  for (i = 0; i < wordsThatPassed.size(); i++) {
+    if (wordSize != wordsThatPassed.at(i).size) {
+      wordSize = wordsThatPassed.at(i).size;
+      text_flow << "Word Size: " << wordSize << std::endl;
+    }
+    text_flow << wordsThatPassed.at(i).word << std::endl;
   }
 
   std::cout << text_flow.str();

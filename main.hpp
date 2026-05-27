@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <cstring>
+#include <algorithm>
 
 #define MAX_SCRAMBLED_SIZE 24
 #define MAJOR_VER 0
@@ -13,6 +14,7 @@ struct Dict{
   int letters[26];
   bool pass;
   std::string word;
+  int size;
   Dict();
 };
 
