@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-Dict::Dict(){
+DictWord::DictWord(){
   //memset(letters, 0, 26 * sizeof(int));
   std::fill(std::begin(letters), std::end(letters), 0);
   pass = true;
@@ -8,7 +8,7 @@ Dict::Dict(){
 }
 
 std::vector<std::string> Functions::param_list = {"-h", "--help", "-s", "--substr"};
-std::vector <Dict> dictionary;
+std::vector <DictWord> Dictionary;
 
 int get_index(const char &c){
   int temp = -1;
@@ -21,9 +21,9 @@ int get_index(const char &c){
   return temp;
 }
 
-Dict process_word(const std::string &here){
+DictWord process_word(const std::string &here){
   uint64_t i, length = here.length();
-  Dict temporary;
+  DictWord temporary;
   temporary.word = here;
 
   for(i = 0; i < length; i++){
@@ -35,60 +35,59 @@ Dict process_word(const std::string &here){
       ++temporary.letters[index];
     }
   }
+  temporary.size = length;
   return temporary;
 }
 
-bool check_if_pass(const Dict &source, Dict &current){
+bool check_if_pass(const DictWord &source, DictWord &current){
   uint64_t i;
   for(i = 0; i < 26; i++){
     if(current.letters[i] > source.letters[i]){
       current.pass = false;
-      current.size = 0;
       break;
     }
   }
-  current.size = current.word.size();
   return current.pass;
 }
 
-void load_settings(std::ifstream &settings, std::string &dictionary_file){
+void load_settings(std::ifstream &settings, std::string &Dictionary_file){
   if(settings.is_open()){
-    getline(settings, dictionary_file);
+    getline(settings, Dictionary_file);
     settings.close();
   }else{
     std::ofstream new_settings("settings.cfg");
-    dictionary_file = "sowpods.txt";
-    new_settings << dictionary_file;
+    Dictionary_file = "sowpods.txt";
+    new_settings << Dictionary_file;
     new_settings.close();
     std::cout << "Generating config file..." << std::endl;
   }
 }
 
-void preload_dictionary(const std::string& dictionary_file, bool message){
+void preload_Dictionary(const std::string& Dictionary_file, bool message){
   std::string temporary;
-  std::ifstream file(dictionary_file.c_str());
+  std::ifstream file(Dictionary_file.c_str());
 
-  if(dictionary.size() > 0){
-    dictionary.clear();
+  if(Dictionary.size() > 0){
+    Dictionary.clear();
   }
 
   if(file.is_open()){
     if(message) {
-      std::cout << "Dictionary file found, loading dictionary..." << std::endl;
+      std::cout << "Dictionary file found, loading Dictionary..." << std::endl;
     }
     while(!file.eof()){
       std::getline(file, temporary);
       if (temporary.size() < 1){
         continue;
       }
-      dictionary.push_back(process_word(temporary));
+      Dictionary.push_back(process_word(temporary));
     }
     if(message) {
       std::cout << "Dictionary loaded" << std::endl;
     }
     file.close();
   }else{
-    std::cerr << "Error preloading dictionary file!" << std::endl;
+    std::cerr << "Error preloading Dictionary file!" << std::endl;
   }
 }
 
@@ -96,12 +95,12 @@ void scramble(){
   std::stringstream text_flow;
 
   std::string scrambled;
-  Dict scrambled_dict;
+  DictWord scrambled_DictWord;
 
   bool check = false;
   uint64_t i, leng;
   
-  std::vector<Dict> wordsThatPassed;
+  std::vector<DictWord> wordsThatPassed;
   int wordSize = 0;
 
   std::cout << "enter string to scramble: ";
@@ -117,24 +116,24 @@ void scramble(){
     break;
   }
 
-  scrambled_dict = process_word(scrambled);
+  scrambled_DictWord = process_word(scrambled);
 
   //compare?
-  leng = dictionary.size();
+  leng = Dictionary.size();
 
   if(leng < 1){
-    std::cerr << "looks like dictionary is not loaded or missing..." << std::endl;
+    std::cerr << "looks like Dictionary is not loaded or missing..." << std::endl;
   }
 
   for(i = 0; i < leng; i++){
-    check = check_if_pass(scrambled_dict, dictionary.at(i));
+    check = check_if_pass(scrambled_DictWord, Dictionary.at(i));
     if(check){
-      wordsThatPassed.push_back(dictionary.at(i));
+      wordsThatPassed.push_back(Dictionary.at(i));
     }
   }
   
-  std::sort(wordsThatPassed.begin(), wordsThatPassed.end(), [](const Dict &a, const Dict &b ){
-    return a.size > b.size;
+  std::sort(wordsThatPassed.begin(), wordsThatPassed.end(), [](const DictWord &a, const DictWord &b ){
+    return a.size < b.size;
   });
   
   for (i = 0; i < wordsThatPassed.size(); i++) {
@@ -150,20 +149,20 @@ void scramble(){
 
   std::cout << "*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=" << std::endl;
   for(i = 0; i < leng; i++){
-    dictionary.at(i).pass = true;
+    Dictionary.at(i).pass = true;
   }
-  //dictionary.clear();
+  //Dictionary.clear();
 }
 
-void change_dictionary(std::string &dictionary_file){
+void change_Dictionary(std::string &Dictionary_file){
   std::string temp;
-  std::cout << "Enter dictionary file: ";
+  std::cout << "Enter Dictionary file: ";
   std::getline(std::cin, temp);
-  dictionary_file = temp;
+  Dictionary_file = temp;
   std::ifstream settings("settings.cfg");
-  std::cout << "Setting dictionary file to " << temp << std::endl;
+  std::cout << "Setting Dictionary file to " << temp << std::endl;
   load_settings(settings, temp);
-  preload_dictionary(dictionary_file);
+  preload_Dictionary(Dictionary_file);
 }
 
 void Functions::print_help()
@@ -210,23 +209,23 @@ void Functions::set_functions(const std::vector<std::string>& args)
 
 int main(int argc, char* argv[]){
   if(argc == 1) {
-    dictionary.reserve(100);
+    Dictionary.reserve(100);
 
     std::cout << "Word unscrambler by pvzzombs" << std::endl;
     std::cout << __DATE__ << ", " << __TIME__ << ", " << __cplusplus << "; " << MAJOR_VER << "." << MINOR_VER << "." << CHANGE_VER << std::endl;
 
-    std::string dictionary_file;
+    std::string Dictionary_file;
     std::ifstream settings("settings.cfg");
 
     std::cout << "Finding config file..." << std::endl;
-    load_settings(settings, dictionary_file);
+    load_settings(settings, Dictionary_file);
 
-    std::cout << "Preloading dictionary..." << std::endl;
-    preload_dictionary(dictionary_file);
+    std::cout << "Preloading Dictionary..." << std::endl;
+    preload_Dictionary(Dictionary_file);
 
     while(true){
       std::cout << "Press any key of choice: " << std::endl;
-      std::cout << "(A) Scramble. (b) Change dictionary. (c) Exit." << std::endl;
+      std::cout << "(A) Scramble. (b) Change Dictionary. (c) Exit." << std::endl;
       std::cout << "==============================================" << std::endl;
       char choice;
       std::cin >> choice;
@@ -237,17 +236,17 @@ int main(int argc, char* argv[]){
           scramble();
           break;
         case 'b': case 'B':
-          change_dictionary(dictionary_file);
+          change_Dictionary(Dictionary_file);
           break;
         case 'c': case 'C':
-          dictionary.clear();
+          Dictionary.clear();
           exit(0);
           break;
         default:
           scramble();
       }
       std::cout << std::endl << std::endl;
-      //preload_dictionary(dictionary_file, 0);
+      //preload_Dictionary(Dictionary_file, 0);
     }
 
     return 0;
@@ -267,34 +266,34 @@ int main(int argc, char* argv[]){
         func.print_help();
         return 0;
       } else if(!scramble.empty()) {
-        std::string dictionary_file;
+        std::string Dictionary_file;
         std::ifstream settings("settings.cfg");
 
-        load_settings(settings, dictionary_file);
+        load_settings(settings, Dictionary_file);
 
-        preload_dictionary(dictionary_file, 0);
+        preload_Dictionary(Dictionary_file, 0);
 
         std::stringstream text_flow;
         bool check = false;
         uint64_t i, leng;
-        Dict scrambled_dict = process_word(scramble);
+        DictWord scrambled_DictWord = process_word(scramble);
 
         //compare?
-        leng = dictionary.size();
+        leng = Dictionary.size();
 
         if(leng < 1){
-          std::cerr << "Looks like dictionary is not loaded or missing..." << std::endl;
+          std::cerr << "Looks like Dictionary is not loaded or missing..." << std::endl;
         }
 
         for(i = 0; i < leng; i++){
-          check = check_if_pass(scrambled_dict, dictionary.at(i));
+          check = check_if_pass(scrambled_DictWord, Dictionary.at(i));
           if(func.substring) {
             if(check) {
-              text_flow << "Found word: " << dictionary.at(i).word << std::endl;
+              text_flow << "Found word: " << Dictionary.at(i).word << std::endl;
             }
           } else {
-            if(check && dictionary.at(i).word.size() == scramble.size()){
-              text_flow << "Found word: " << dictionary.at(i).word << std::endl;
+            if(check && Dictionary.at(i).word.size() == scramble.size()){
+              text_flow << "Found word: " << Dictionary.at(i).word << std::endl;
             }
           }
         }
@@ -302,7 +301,7 @@ int main(int argc, char* argv[]){
         std::cout << text_flow.str();
         text_flow.str("");
 
-        dictionary.clear();
+        Dictionary.clear();
       } else {
         std::cerr << "[NO WORD TO UNSCRAMBLE]" << std::endl;
       }

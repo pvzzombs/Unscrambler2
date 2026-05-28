@@ -9,14 +9,14 @@
 #define MAX_SCRAMBLED_SIZE 24
 #define MAJOR_VER 0
 #define MINOR_VER 3
-#define CHANGE_VER 1
+#define CHANGE_VER 2
 
-struct Dict{
+struct DictWord{
   int letters[26];
   bool pass;
   std::string word;
   int size;
-  Dict();
+  DictWord();
 };
 
 struct Functions {
@@ -32,9 +32,9 @@ struct Functions {
 };
 
 int get_index(const char &c);
-Dict process_word(const std::string &here);
-bool check_if_pass(const Dict &source, Dict &current);
-void load_settings(std::ifstream &settings, std::string &dictionary_file);
-void preload_dictionary(const std::string& dictionary_file, bool message = true);
-void scramble(const std::string &dictionary_file, bool substring = false);
-void change_dictionary(std::string &dictionary_file);
+DictWord process_word(const std::string &here);
+bool check_if_pass(const DictWord &source, DictWord &current);
+void load_settings(std::ifstream &settings, std::string &Dictionary_file);
+void preload_Dictionary(const std::string& Dictionary_file, bool message = true);
+void scramble(const std::string &Dictionary_file, bool substring = false);
+void change_Dictionary(std::string &Dictionary_file);
